@@ -3,17 +3,18 @@ import './App.css';
 import TaskList from './components/taskList';
 import DropDown from './components/dropDown';
 import PopUp from './components/popup';
+import { Button } from 'reactstrap';
 
 function App() {
-  const [tasks, setTasks] = useState([])
+  const [tasks, setTasks] = useState(JSON.parse(localStorage.getItem('storedTasks')) || []);
   const [status, setStatus] = useState("All");
   const [showAddForm, setShowAddForm] = useState(false);
   const [filtered, setFiltered] = useState([]);
 
   const addTaskToList = (task) => {
     const newTasks = [...tasks, task];
-    setTasks(newTasks);
-    console.log(task)
+    console.log(task);
+    saveTasks(newTasks);
   }
   const openPopUp = (show) => {
     setShowAddForm(show)
@@ -25,8 +26,17 @@ function App() {
     if (taskIndex !== -1) {
       currentTasks[taskIndex] = task;
     }
-   setTasks(currentTasks); 
+   saveTasks(currentTasks); 
   };
+
+  const deleteTask = (id) => {
+    saveTasks(tasks.filter((task) => task.id != id));
+};
+
+  const saveTasks = (tasks) => {
+    setTasks(tasks)
+    localStorage.setItem('storedTasks', JSON.stringify(tasks));
+  }
 
   const filterTaskStatus = (taskStatus) => {setStatus(taskStatus)}
 
@@ -52,13 +62,14 @@ useEffect(() => {
   
   return (
     <div className="To-Do-App">
-      {showAddForm && <PopUp tasks={tasks} setTasks={setTasks} addTaskToList={addTaskToList} />}
+      {showAddForm && <PopUp tasks={tasks} setTasks={setTasks} addTaskToList={addTaskToList} updateTask={updateTask} setShowAddForm={setShowAddForm} />}
       <header className="App-header">
         <h1>To Do App</h1>
-        <button className="Add" onClick={() => {openPopUp(true)}}>Add a Task</button>
+        <div className="menu">
+        <Button className="Add" onClick={() => {openPopUp(true)}}>Add a Task</Button>
         <DropDown filterTaskStatus={filterTaskStatus} />
-        {/* <TaskForm tasks={tasks} setTasks={setTasks}/> */}
-        <TaskList tasks={tasks} setTasks={setTasks} filterStatus={filterStatus} filtered={filtered} updateTask={updateTask} />
+        </div>
+        <TaskList tasks={tasks} setTasks={setTasks} filterStatus={filterStatus} filtered={filtered} updateTask={updateTask} deleteTask={deleteTask} />
       </header>
     </div>
   );

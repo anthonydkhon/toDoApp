@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React from 'react';
 import Task from './task';
 
 const TaskList = (props) => {
@@ -13,7 +13,9 @@ const TaskList = (props) => {
                     setTasks={props.setTasks}
                     task={task}
                     tasks={props.tasks}
-                    updateTask={props.updateTask} />
+                    updateTask={props.updateTask}
+                    deleteTask={props.deleteTask}
+                     />
                 ))}
             </ul>
         </div>

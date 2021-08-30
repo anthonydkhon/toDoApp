@@ -1,14 +1,28 @@
 import React, { useState } from 'react'
-import { 
-    Dropdown, 
-    DropdownToggle, 
-    DropdownMenu, 
-    DropdownItem 
-} from 'reactstrap';
+import '../App.css';
+import { Button } from 'reactstrap';
+import { FaRegWindowClose } from 'react-icons/fa';
 
 const TaskForm = (props) => {
-    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const icons = {
+        cart: "fas fa-shopping-cart",
+        heart: "fas fa-heartbeat",
+        mail:  "fas fa-envelope",
+        phone: "fas fa-envelope",
+        exclamation: "fas fa-exclamation",
+        laptop: "fas fa-laptop-code"
+    }
+    const [icon, setIcon] =useState(icons.cart);
 
+
+
+        
+
+    const selectIcon = (e) => {
+        setIcon(icons[e.target.value])
+        console.log(e.target.value)
+    }
+    
     const handleSubmit = (e) => {
         e.preventDefault();
         const task = 
@@ -16,13 +30,13 @@ const TaskForm = (props) => {
                 name: e.target.taskName.value,
                 completed: false,
                 id: Math.floor(Math.random()*10000),
-                icon: ""
+                icon
             };
         props.addTaskToList(task);
+        props.setShowAddForm(false);
 
     };
 
-    const toggle = () => setDropdownOpen(prevState => !prevState);
 
     return (
         <form className="task-form" onSubmit={handleSubmit}>
@@ -32,26 +46,28 @@ const TaskForm = (props) => {
                 name="taskName"
                 className="task-input"
             />
-            <Dropdown isOpen={dropdownOpen} toggle={toggle}>
-                <DropdownToggle caret>
-                Categories
-                </DropdownToggle>
-                <DropdownMenu>
-                    <DropdownItem>Add</DropdownItem>
-                    <DropdownItem divider />
-                    <DropdownItem value="All" >View All Tasks</DropdownItem>
-                    <DropdownItem value="Completed" >View Completed Tasks</DropdownItem>
-                    <DropdownItem value="Not Completed" >View Non-Completed Tasks</DropdownItem>
-                </DropdownMenu>
-            </Dropdown>
-            <button 
+                <select onChange={selectIcon}>
+                    <option value="cart">cart</option>
+                    <option value="heart">heart</option>
+                    <option value="mail">mail</option>
+                    <option value="phone">phone</option>
+                    <option value="exclamation">exclamation</option>
+                    <option value="laptop">laptop</option>
+                </select>
+                <i className={icon} />
+            <Button 
             className="add-task-btn"
-            type="submit">
+            type="submit"
+            >
                 Add Task
-            </button>
-
+            </Button>
+                <FaRegWindowClose className="close-btn" onClick={() => props.setShowAddForm(false)} />
         </form>
     )
 }
 
 export default TaskForm;
+
+
+            
+           
